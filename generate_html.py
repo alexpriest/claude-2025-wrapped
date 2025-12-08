@@ -66,7 +66,22 @@ def generate_html():
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Alex's Claude 2025 Wrapped</title>
+    <title>Claude 2025 Wrapped</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+
+    <!-- Open Graph / Social Sharing -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Claude 2025 Wrapped">
+    <meta property="og:description" content="A year in AI conversations: 501 conversations, 748k words exchanged, 140 days active.">
+    <meta property="og:image" content="https://prjcts.alxprst.co/claude-2025-wrapped/assets/og-image.png">
+    <meta property="og:url" content="https://prjcts.alxprst.co/claude-2025-wrapped/">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Claude 2025 Wrapped">
+    <meta name="twitter:description" content="A year in AI conversations: 501 conversations, 748k words exchanged, 140 days active.">
+    <meta name="twitter:image" content="https://prjcts.alxprst.co/claude-2025-wrapped/assets/og-image.png">
+
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
