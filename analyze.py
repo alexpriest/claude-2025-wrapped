@@ -303,6 +303,111 @@ def find_interesting_conversations(convos):
     return interesting
 
 
+def calculate_carbon_footprint(stats):
+    """
+    AGGRESSIVE carbon footprint estimate for power users with extended thinking.
+
+    This estimate intentionally errs HIGH to avoid underestimating impact.
+
+    === ENERGY ===
+    Claude 3.7 Sonnet ET benchmarked at 17 Wh for long prompts (arxiv 2505.09598).
+    Power users doing substantive work: assume ALL queries are long/complex.
+    Using 20 Wh base (above benchmark, accounting for heavy reasoning budgets).
+
+    PUE: 1.3 (conservative for AI workloads; typical hyperscaler is 1.2)
+
+    === CARBON ===
+    Grid intensity: 0.45 kg CO2/kWh (above US average, accounts for peaker plants)
+    Hardware embodied: 1.5x operational (GPU fab, server manufacturing, logistics)
+
+    Training amortization: Reasoning models generate 4-10x more internal tokens.
+    Base 6g/query × 4x multiplier = 24g CO2/query for extended thinking.
+
+    === WATER ===
+    Direct cooling: 2.5 L/kWh (upper range for evaporative cooling)
+    Indirect (power generation): 7.6 L/kWh (thermoelectric plant water)
+    Total: 10 L/kWh combined
+
+    === OFFSET ===
+    $20/ton (quality premium over typical $15 voluntary market rate)
+
+    NOTE: Claude.ai web usage only. API and Claude Code would ADD to this.
+
+    Sources:
+    - arxiv.org/abs/2505.09598 (Claude ET: 17 Wh long prompts)
+    - EESI.org (data center water: 1-9 L/kWh direct)
+    - IEEE Spectrum (7.6 L/kWh indirect from power generation)
+    - Nous Research (reasoning models 4-10x token overhead)
+    """
+    total_pairs = min(stats["human_messages"], stats["assistant_messages"])
+
+    # === ENERGY ===
+    # Extended thinking benchmark: 17 Wh for long prompts
+    # Power user: all queries substantive, pushing reasoning budgets
+    wh_per_exchange = 20.0
+
+    # PUE: 1.3 for AI inference (above typical 1.2)
+    pue = 1.3
+
+    # Total operational energy
+    operational_kwh = (total_pairs * wh_per_exchange * pue) / 1000
+
+    # === CARBON FROM ELECTRICITY ===
+    # Grid intensity: 0.45 kg/kWh (above average, peaker plant margin)
+    grid_intensity = 0.45
+
+    electricity_co2_kg = operational_kwh * grid_intensity
+
+    # === HARDWARE EMBODIED CARBON ===
+    # Manufacturing adds 50% to operational (GPU fab is carbon-intensive)
+    hardware_multiplier = 1.5
+    operational_co2_kg = electricity_co2_kg * hardware_multiplier
+
+    # === TRAINING AMORTIZATION ===
+    # Base: 6g CO2/query for standard inference
+    # Extended thinking: 4-10x more internal tokens
+    # Using 4x = 24g CO2/query
+    training_base_kg = 0.006
+    reasoning_multiplier = 4.0
+    training_co2_kg = total_pairs * training_base_kg * reasoning_multiplier
+
+    # === TOTAL CARBON ===
+    total_co2_kg = operational_co2_kg + training_co2_kg
+    total_co2_tons = total_co2_kg / 1000
+
+    # === WATER ===
+    # Direct (evaporative): ~2.5 L/kWh
+    # Indirect (power gen): ~7.6 L/kWh
+    # Total: ~10 L/kWh
+    water_per_kwh = 10.0
+    water_liters = operational_kwh * water_per_kwh
+
+    # === OFFSET COST ===
+    # $20/ton for high-quality offsets
+    offset_price_per_ton = 20.0
+    offset_cost = total_co2_tons * offset_price_per_ton
+
+    # === CONTEXT ===
+    car_miles = total_co2_kg / 0.4  # 0.4 kg CO2/mile
+    flight_miles = total_co2_kg / 0.25  # 0.25 kg CO2/passenger-mile
+    showers = water_liters / 65  # 65L per shower
+
+    return {
+        "operational_kwh": round(operational_kwh, 1),
+        "electricity_co2_kg": round(electricity_co2_kg, 1),
+        "operational_co2_kg": round(operational_co2_kg, 1),
+        "training_co2_kg": round(training_co2_kg, 1),
+        "total_co2_kg": round(total_co2_kg, 1),
+        "total_co2_tons": round(total_co2_tons, 3),
+        "offset_cost_usd": round(offset_cost, 2),
+        "water_liters": round(water_liters, 0),
+        "car_miles_equivalent": round(car_miles, 0),
+        "flight_miles_equivalent": round(flight_miles, 0),
+        "showers_equivalent": round(showers, 1),
+        "message_pairs": total_pairs,
+    }
+
+
 def generate_wrapped_stats(stats, topics, projects):
     """Generate Spotify Wrapped-style fun statistics"""
     wrapped = {
@@ -319,6 +424,7 @@ def generate_wrapped_stats(stats, topics, projects):
         "top_topics": [],
         "streaks_and_records": {},
         "time_patterns": {},
+        "carbon_footprint": calculate_carbon_footprint(stats),
     }
 
     # Fun word comparisons

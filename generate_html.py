@@ -45,6 +45,7 @@ def generate_html():
     peak = wrapped.get("peak_usage", {})
     time_patterns = wrapped.get("time_patterns", {})
     records = wrapped.get("streaks_and_records", {})
+    carbon = wrapped.get("carbon_footprint", {})
 
     html = f"""<!DOCTYPE html>
 <html lang="en">
@@ -633,6 +634,61 @@ def generate_html():
                 </div>
                 ''' for c in records.get('top_5_longest', [])[:5])}
             </div>
+        </section>
+
+        <section class="section">
+            <h2>Carbon Footprint & Offset</h2>
+            <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 1.25rem;">Claude.ai web usage only — API and Claude Code usage would add to this total</p>
+            <div class="deep-insight">
+                <h3>Your Environmental Impact</h3>
+                <p>Your {carbon.get('message_pairs', 0):,} message exchanges produced an estimated <span class="highlight">{carbon.get('total_co2_kg', 0)} kg of CO2</span>. That's {carbon.get('operational_co2_kg', 0)} kg from inference + hardware embodied carbon, plus {carbon.get('training_co2_kg', 0)} kg from amortized model training. Equivalent to driving <span class="highlight">{int(carbon.get('car_miles_equivalent', 0)):,} miles</span>. Data center and power plant cooling used <span class="highlight">{int(carbon.get('water_liters', 0)):,} liters of water</span> ({carbon.get('showers_equivalent', 0)} showers).</p>
+            </div>
+
+            <div class="stats-grid" style="margin-top: 1rem;">
+                <div class="stat-card">
+                    <div class="stat-value">{carbon.get('total_co2_kg', 0)}</div>
+                    <div class="stat-label">kg CO2</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">{carbon.get('operational_kwh', 0)}</div>
+                    <div class="stat-label">kWh Energy</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">{int(carbon.get('water_liters', 0)):,}</div>
+                    <div class="stat-label">Liters Water</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">{int(carbon.get('car_miles_equivalent', 0)):,}</div>
+                    <div class="stat-label">Car Miles Equiv.</div>
+                </div>
+            </div>
+
+            <div class="insight-grid" style="margin-top: 1rem;">
+                <div class="insight-card">
+                    <div class="insight-title">Inference + Hardware</div>
+                    <div class="insight-value">{carbon.get('operational_co2_kg', 0)} kg CO2</div>
+                </div>
+                <div class="insight-card">
+                    <div class="insight-title">Training (Amortized)</div>
+                    <div class="insight-value">{carbon.get('training_co2_kg', 0)} kg CO2</div>
+                </div>
+            </div>
+
+            <div class="stats-grid" style="margin-top: 1.5rem;">
+                <div class="stat-card" style="background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); border: 2px solid #22c55e; grid-column: span 2;">
+                    <div class="stat-value" style="color: #16a34a; font-size: 2.75rem;">${carbon.get('offset_cost_usd', 0):.2f}</div>
+                    <div class="stat-label" style="color: #15803d; font-weight: 500;">Estimated Offset Cost</div>
+                </div>
+            </div>
+
+            <div class="deep-insight" style="margin-top: 1.5rem; background: linear-gradient(135deg, #f0fdf4 0%, #ffffff 100%); border-left: 3px solid #22c55e;">
+                <h3 style="color: #16a34a;">How to Offset</h3>
+                <p>To neutralize your Claude.ai carbon footprint, donate <span class="highlight" style="color: #16a34a;">${carbon.get('offset_cost_usd', 0):.2f}</span> to a quality offset provider: <a href="https://www.goldstandard.org/" target="_blank" style="color: var(--accent);">Gold Standard</a>, <a href="https://www.southpole.com/" target="_blank" style="color: var(--accent);">South Pole</a>, or <a href="https://www.cooleffect.org/" target="_blank" style="color: var(--accent);">Cool Effect</a>.</p>
+            </div>
+
+            <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 1rem; line-height: 1.5;">
+                <em>Aggressive methodology for power users: 20 Wh/query (above 17 Wh extended thinking benchmark), ×1.3 PUE, ×1.5 hardware embodied, 0.45 kg CO2/kWh grid, training at 24g/query (6g base × 4 for reasoning overhead), water at 10 L/kWh (direct + indirect), $20/ton offset. Sources: <a href="https://arxiv.org/abs/2505.09598" target="_blank" style="color: var(--text-muted);">arxiv.org/abs/2505.09598</a>, <a href="https://www.eesi.org/articles/view/data-centers-and-water-consumption" target="_blank" style="color: var(--text-muted);">EESI</a>, <a href="https://spectrum.ieee.org/ai-water-usage" target="_blank" style="color: var(--text-muted);">IEEE Spectrum</a></em>
+            </p>
         </section>
 
         <section class="section">
