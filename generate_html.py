@@ -24,11 +24,25 @@ def generate_html():
     # Prepare data for charts
     months_data = stats.get("conversations_by_month", {})
     sorted_months = sorted(months_data.items())
-    months_labels = [m[0] for m in sorted_months]
+    month_abbrevs = {
+        "01": "Jan", "02": "Feb", "03": "Mar", "04": "Apr",
+        "05": "May", "06": "Jun", "07": "Jul", "08": "Aug",
+        "09": "Sep", "10": "Oct", "11": "Nov", "12": "Dec"
+    }
+    months_labels = [month_abbrevs.get(m[0].split("-")[1], m[0]) for m in sorted_months]
     months_values = [m[1] for m in sorted_months]
 
     hours_data = stats.get("messages_by_hour", {})
-    hours_labels = [str(h) for h in range(24)]
+    def format_hour(h):
+        if h == 0:
+            return "12am"
+        elif h < 12:
+            return f"{h}am"
+        elif h == 12:
+            return "12pm"
+        else:
+            return f"{h-12}pm"
+    hours_labels = [format_hour(h) for h in range(24)]
     hours_values = [hours_data.get(str(h), 0) for h in range(24)]
 
     weekday_order = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
