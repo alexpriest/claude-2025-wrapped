@@ -1,0 +1,16 @@
+# Raw conversation exports (sensitive)
+raw-exports/
+
+# Processed analysis (contains conversation names/dates)
+analysis/
+
+# macOS
+.DS_Store
+**/.DS_Store
+
+# Python
+__pycache__/
+*.pyc
+
+# Output (regenerate with generate_html.py)
+output/
