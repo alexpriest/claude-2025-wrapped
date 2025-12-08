@@ -1,6 +1,9 @@
 # Raw conversation exports (sensitive)
 raw-exports/
 
+# Licensed fonts (not for redistribution)
+assets/fonts/
+
 # Processed analysis (contains conversation names/dates)
 analysis/
 
