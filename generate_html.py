@@ -58,12 +58,36 @@ def generate_html():
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
+        /* Cartridge font */
+        @font-face {{
+            font-family: "Cartridge";
+            src: url("assets/fonts/Cartridge-Light.woff2") format("woff2");
+            font-weight: 300;
+            font-style: normal;
+            font-display: swap;
+        }}
+        @font-face {{
+            font-family: "Cartridge";
+            src: url("assets/fonts/Cartridge-Regular.woff2") format("woff2");
+            font-weight: 400;
+            font-style: normal;
+            font-display: swap;
+        }}
+        @font-face {{
+            font-family: "Cartridge";
+            src: url("assets/fonts/Cartridge-Semibold.woff2") format("woff2");
+            font-weight: 600;
+            font-style: normal;
+            font-display: swap;
+        }}
+
         * {{
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }}
 
+        /* Light mode (default) */
         :root {{
             --bg-primary: #fffcf0;
             --bg-secondary: #f5f2e6;
@@ -75,6 +99,34 @@ def generate_html():
             --text-secondary: #57534e;
             --text-muted: #78716c;
             --border: #e5e2d9;
+            --chart-grid: rgba(0, 0, 0, 0.06);
+            --green-bg: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+            --green-bg-alt: linear-gradient(135deg, #f0fdf4 0%, #ffffff 100%);
+            --green-border: #22c55e;
+            --green-text: #16a34a;
+            --green-text-dark: #15803d;
+        }}
+
+        /* Dark mode */
+        @media (prefers-color-scheme: dark) {{
+            :root {{
+                --bg-primary: #100f0f;
+                --bg-secondary: #1a1918;
+                --bg-card: #242220;
+                --accent: #da702c;
+                --accent-light: #e8883a;
+                --accent-glow: rgba(218, 112, 44, 0.2);
+                --text-primary: #fffcf0;
+                --text-secondary: #a8a29e;
+                --text-muted: #78716c;
+                --border: #333;
+                --chart-grid: rgba(255, 255, 255, 0.08);
+                --green-bg: linear-gradient(135deg, #14532d 0%, #166534 100%);
+                --green-bg-alt: linear-gradient(135deg, #14532d 0%, #1a1918 100%);
+                --green-border: #22c55e;
+                --green-text: #4ade80;
+                --green-text-dark: #86efac;
+            }}
         }}
 
         body {{
@@ -97,12 +149,17 @@ def generate_html():
             padding: 3rem 0;
         }}
 
+        h1, h2, h3 {{
+            font-family: "Cartridge", 'Work Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+        }}
+
         h1 {{
             font-size: 3rem;
             font-weight: 600;
             color: var(--accent);
             margin-bottom: 0.5rem;
             letter-spacing: -0.02em;
+            font-feature-settings: "ss02" on;
         }}
 
         .subtitle {{
@@ -675,15 +732,15 @@ def generate_html():
             </div>
 
             <div class="stats-grid" style="margin-top: 1.5rem;">
-                <div class="stat-card" style="background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); border: 2px solid #22c55e; grid-column: span 2;">
-                    <div class="stat-value" style="color: #16a34a; font-size: 2.75rem;">${carbon.get('offset_cost_usd', 0):.2f}</div>
-                    <div class="stat-label" style="color: #15803d; font-weight: 500;">Estimated Offset Cost</div>
+                <div class="stat-card" style="background: var(--green-bg); border: 2px solid var(--green-border); grid-column: span 2;">
+                    <div class="stat-value" style="color: var(--green-text); font-size: 2.75rem;">${carbon.get('offset_cost_usd', 0):.2f}</div>
+                    <div class="stat-label" style="color: var(--green-text-dark); font-weight: 500;">Estimated Offset Cost</div>
                 </div>
             </div>
 
-            <div class="deep-insight" style="margin-top: 1.5rem; background: linear-gradient(135deg, #f0fdf4 0%, #ffffff 100%); border-left: 3px solid #22c55e;">
-                <h3 style="color: #16a34a;">How to Offset</h3>
-                <p>To neutralize your Claude.ai carbon footprint, donate <span class="highlight" style="color: #16a34a;">${carbon.get('offset_cost_usd', 0):.2f}</span> to a quality offset provider: <a href="https://www.goldstandard.org/" target="_blank" style="color: var(--accent);">Gold Standard</a>, <a href="https://www.southpole.com/" target="_blank" style="color: var(--accent);">South Pole</a>, or <a href="https://www.cooleffect.org/" target="_blank" style="color: var(--accent);">Cool Effect</a>.</p>
+            <div class="deep-insight" style="margin-top: 1.5rem; background: var(--green-bg-alt); border-left: 3px solid var(--green-border);">
+                <h3 style="color: var(--green-text);">How to Offset</h3>
+                <p>To neutralize your Claude.ai carbon footprint, donate <span class="highlight" style="color: var(--green-text);">${carbon.get('offset_cost_usd', 0):.2f}</span> to a quality offset provider: <a href="https://www.goldstandard.org/" target="_blank" style="color: var(--accent);">Gold Standard</a>, <a href="https://www.southpole.com/" target="_blank" style="color: var(--accent);">South Pole</a>, or <a href="https://www.cooleffect.org/" target="_blank" style="color: var(--accent);">Cool Effect</a>.</p>
             </div>
 
             <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 1rem; line-height: 1.5;">
@@ -695,8 +752,8 @@ def generate_html():
             <h2>What Your Conversations Reveal</h2>
 
             <div class="deep-insight">
-                <h3>How You Use Claude: Thinking Out Loud</h3>
-                <p>You asked "thoughts?" <span class="highlight">205 times</span> this year. That's your signature move - present something, get a reaction, refine. You use Claude less for research and more for <span class="highlight">processing</span>: working through pricing decisions, drafting emails, pressure-testing strategies. It's externalized thinking.</p>
+                <h3>How You Use Claude: The Sounding Board</h3>
+                <p>You use Claude less for research and more for <span class="highlight">processing</span>. Working through pricing decisions, drafting emails, pressure-testing strategies. Your pattern: present something, get a reaction, refine. It's externalized thinking - you're clearer on what you want after you've seen a response to it.</p>
             </div>
 
             <div class="deep-insight">
@@ -735,8 +792,8 @@ def generate_html():
                             <span>Small decisions, you move fast. But career moves, investments, and major life choices generate a lot of exploratory conversations. The thoroughness is useful, but sometimes it looks like delay.</span>
                         </li>
                         <li>
-                            <strong>The "Thoughts?" Reflex</strong>
-                            <span>205 times is a lot. Sometimes you probably already know the answer and are looking for confirmation. Worth noticing when you're seeking input vs. seeking permission.</span>
+                            <strong>Context Switching as Default</strong>
+                            <span>You jump between domains constantly - seven distinct topic areas this year, often multiple in a single day. It works for you, but the scattered attention might mean some projects get 80% done before the next thing grabs focus.</span>
                         </li>
                         <li>
                             <strong>One More Iteration</strong>
@@ -757,7 +814,7 @@ def generate_html():
 
             <div class="deep-insight">
                 <h3>The Collaboration Pattern</h3>
-                <p>You present work-in-progress, ask "thoughts?", incorporate feedback, repeat. It's efficient - you don't spend time explaining context that becomes obvious from the draft itself. You also aren't precious about your first attempts; you expect to iterate.</p>
+                <p>You share work-in-progress early, get feedback, incorporate it, repeat. It's efficient - you don't spend time explaining context that becomes obvious from the draft itself. You're not precious about first attempts; iteration is the point.</p>
             </div>
         </section>
 
@@ -849,9 +906,17 @@ def generate_html():
     </div>
 
     <script>
-        // Chart.js configuration - matching alexpriest.com colors (light mode)
-        Chart.defaults.color = '#57534e';
-        Chart.defaults.borderColor = 'rgba(0, 0, 0, 0.08)';
+        // Detect dark mode and set chart colors accordingly
+        const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const textColor = isDark ? '#a8a29e' : '#57534e';
+        const gridColor = isDark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.06)';
+        const accentColor = isDark ? 'rgba(218, 112, 44, 1)' : 'rgba(203, 97, 32, 1)';
+        const accentBg = isDark ? 'rgba(218, 112, 44, 0.85)' : 'rgba(203, 97, 32, 0.85)';
+        const accentFill = isDark ? 'rgba(218, 112, 44, 0.2)' : 'rgba(203, 97, 32, 0.12)';
+        const pointBorder = isDark ? '#242220' : '#fff';
+
+        Chart.defaults.color = textColor;
+        Chart.defaults.borderColor = gridColor;
 
         // Months chart
         new Chart(document.getElementById('monthsChart'), {{
@@ -861,8 +926,8 @@ def generate_html():
                 datasets: [{{
                     label: 'Conversations',
                     data: {json.dumps(months_values)},
-                    backgroundColor: 'rgba(203, 97, 32, 0.85)',
-                    borderColor: 'rgba(203, 97, 32, 1)',
+                    backgroundColor: accentBg,
+                    borderColor: accentColor,
                     borderWidth: 1,
                     borderRadius: 4
                 }}]
@@ -876,7 +941,7 @@ def generate_html():
                 scales: {{
                     y: {{
                         beginAtZero: true,
-                        grid: {{ color: 'rgba(0, 0, 0, 0.06)' }}
+                        grid: {{ color: gridColor }}
                     }},
                     x: {{
                         grid: {{ display: false }}
@@ -894,11 +959,11 @@ def generate_html():
                     label: 'Messages',
                     data: {json.dumps(hours_values)},
                     fill: true,
-                    backgroundColor: 'rgba(203, 97, 32, 0.12)',
-                    borderColor: 'rgba(203, 97, 32, 1)',
+                    backgroundColor: accentFill,
+                    borderColor: accentColor,
                     tension: 0.4,
-                    pointBackgroundColor: 'rgba(203, 97, 32, 1)',
-                    pointBorderColor: '#fff',
+                    pointBackgroundColor: accentColor,
+                    pointBorderColor: pointBorder,
                     pointRadius: 3
                 }}]
             }},
@@ -911,7 +976,7 @@ def generate_html():
                 scales: {{
                     y: {{
                         beginAtZero: true,
-                        grid: {{ color: 'rgba(0, 0, 0, 0.06)' }}
+                        grid: {{ color: gridColor }}
                     }},
                     x: {{
                         grid: {{ display: false }}

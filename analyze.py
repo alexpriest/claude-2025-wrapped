@@ -51,23 +51,28 @@ def count_words(text):
 
 
 def extract_hour(timestamp):
-    """Extract hour from ISO timestamp"""
+    """Extract hour from ISO timestamp, converted to US Central time"""
     if not timestamp:
         return None
     try:
         dt = datetime.fromisoformat(timestamp.replace("Z", "+00:00"))
-        return dt.hour
+        # Convert from UTC to Central Time (UTC-6, ignoring DST for simplicity)
+        central_hour = (dt.hour - 6) % 24
+        return central_hour
     except:
         return None
 
 
 def extract_weekday(timestamp):
-    """Extract weekday from ISO timestamp (0=Monday, 6=Sunday)"""
+    """Extract weekday from ISO timestamp, converted to US Central time"""
     if not timestamp:
         return None
     try:
         dt = datetime.fromisoformat(timestamp.replace("Z", "+00:00"))
-        return dt.weekday()
+        # Adjust for Central Time - if hour < 6, it's previous day in Central
+        central_hour = dt.hour - 6
+        day_adjust = -1 if central_hour < 0 else 0
+        return (dt.weekday() + day_adjust) % 7
     except:
         return None
 
