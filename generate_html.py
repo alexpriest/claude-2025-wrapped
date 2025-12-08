@@ -615,6 +615,7 @@ def generate_html():
 
         <section class="section">
             <h2>Conversation Patterns</h2>
+            <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 1.25rem;">Note: Jan-Aug shows split usage between Claude and ChatGPT. September was almost exclusively ChatGPT. Oct-Dec reflects full-time Claude usage.</p>
             <div class="chart-row">
                 <div>
                     <h3 style="font-size: 1rem; color: #94a3b8; margin-bottom: 0.5rem;">Conversations by Month</h3>
@@ -858,15 +859,23 @@ def generate_html():
                     <span class="month-name">July - August</span>
                     <span class="month-theme">Quiet Transition</span>
                 </div>
-                <p>Only 24 conversations across two months - noticeably slower. But the conversations that happened were about Duckbill marketing, consulting landing pages, new client work. A pivot was underway, just not a loud one.</p>
+                <p>Only 24 conversations across two months - noticeably slower. You were splitting time more aggressively between Claude and ChatGPT during this period. The conversations that happened were about Duckbill marketing, consulting landing pages, new client work. A pivot was underway, just not a loud one.</p>
+            </div>
+
+            <div class="month-narrative">
+                <div class="month-header">
+                    <span class="month-name">September</span>
+                    <span class="month-theme">The ChatGPT Experiment</span>
+                </div>
+                <p><strong>1 conversation</strong>. You switched to ChatGPT almost exclusively for the month - an experiment in the other direction. The lone Claude conversation that month was brief. This is the gap in the chart.</p>
             </div>
 
             <div class="month-narrative">
                 <div class="month-header">
                     <span class="month-name">October</span>
-                    <span class="month-theme">Everything at Once</span>
+                    <span class="month-theme">Back to Claude, Full Throttle</span>
                 </div>
-                <p><strong>119 conversations</strong> - 5x your earlier monthly average. Duckbill work dominated (74 mentions), but you were also into fitness tracking, food logging apps, parenting stuff, vermouth experiments. A lot of plates spinning simultaneously.</p>
+                <p><strong>119 conversations</strong> - you came back from the ChatGPT experiment and went all-in on Claude. Duckbill work dominated (74 mentions), but you were also into fitness tracking, food logging apps, parenting stuff, vermouth experiments. A lot of plates spinning simultaneously.</p>
             </div>
 
             <div class="month-narrative">
